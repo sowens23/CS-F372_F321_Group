@@ -2,19 +2,35 @@ document.addEventListener("DOMContentLoaded", async () => {
   const bannerEmail = document.getElementById("banner-email");
 
   try {
+    // === Fetch Session Data ===
+    console.log("Fetching session data...");
     const response = await fetch("http://localhost:3000/api/account/session", {
       credentials: "include", // Ensure cookies are sent with the request
     });
     const data = await response.json();
+    console.log("Session data:", data);
 
     if (data.success) {
       bannerEmail.textContent = `Logged in as: ${data.email}`;
+
+      // Check if the user has "Content Editor" privileges
+      if (!data.roles || !data.roles.includes("Content Editor")) {
+        alert("❌ You do not have permission to access this page.");
+        window.location.href = "../html/index_Home.html"; // Redirect to Home page
+        return;
+      }
     } else {
       bannerEmail.textContent = "Not logged in";
+      alert("❌ You must be logged in to access this page.");
+      window.location.href = "../html/index_Login.html"; // Redirect to Login page
+      return;
     }
   } catch (error) {
     console.error("❌ Error fetching session data:", error);
     bannerEmail.textContent = "Error fetching session";
+    alert("❌ Unable to verify your permissions. Please try again later.");
+    window.location.href = "../html/index_Home.html"; // Redirect to Home page
+    return;
   }
 
   const movieGrid = document.querySelector(".movie-grid");

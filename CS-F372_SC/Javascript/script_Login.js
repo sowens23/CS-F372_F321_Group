@@ -24,7 +24,7 @@ async function autoLogin() {
 
 // Fetch the session data to check if the user is logged in
 document.addEventListener("DOMContentLoaded", async () => {
-  await autoLogin(); // Call the auto-login function
+  // await autoLogin(); // Call the auto-login function
 
   const bannerEmail = document.getElementById("banner-email");
 

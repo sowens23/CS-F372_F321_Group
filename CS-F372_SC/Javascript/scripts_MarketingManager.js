@@ -12,11 +12,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("Session data:", sessionData);
 
     if (sessionData.success) {
-      bannerEmail.textContent = `Logged in as: ${sessionData.email}`;
+      const { email, roles } = sessionData; // Extract email and roles
+      bannerEmail.textContent = `Logged in as: ${email}`;
+    
+      // Check if the user has "Marketing Manager" privileges
+      if (!roles || !roles.includes("Marketing Manager")) {
+        alert("❌ You do not have permission to access this page.");
+        window.location.href = "../html/index_Home.html"; // Redirect to Home page
+        return;
+      }
     } else {
       bannerEmail.textContent = "Not logged in";
-      console.warn("⚠ No active session found.");
-      return; // Stop further execution if not logged in
+      alert("❌ You must be logged in to access this page.");
+      window.location.href = "../html/index_Login.html"; // Redirect to Login page
+      return;
     }
 
     // === Fetch Movie Data ===

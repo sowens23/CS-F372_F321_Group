@@ -66,8 +66,12 @@ exports.login = async (req, res) => {
   const hashed = hash(password, user.salt);
 
   if (hashed === user.password) {
-    // Store email and username in session
-    req.session.user = { email: email, username: user.username }; // Include username in session
+    // Store email, username, and roles in session
+    req.session.user = { 
+      email: email, 
+      username: user.username, 
+      roles: user.roles || ["viewer"] // Default to "viewer" if roles are not defined
+    };
     res.json({ success: true, message: 'Login successful' });
     console.log("Session data:", req.session);
   } else {
@@ -82,7 +86,8 @@ exports.getSession = async (req, res) => {
       res.json({
         success: true,
         email: req.session.user.email,
-        username: req.session.user.username || "viewer", // Provide username or fallback to "Viewer"
+        username: req.session.user.username || "viewer", // Provide username or fallback to "Viewer",
+        roles: req.session.user.roles || ["viewer"], // Provide roles or fallback to "viewer"
       });
     } else {
       res.json({ success: false, message: "No active session" });
